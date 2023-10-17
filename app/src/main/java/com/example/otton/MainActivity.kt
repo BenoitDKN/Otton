@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    //la fonction que j'utilise ci dessus que j'ai ajouté :
+    //la fonction que j'utilise ci dessus que j'ai ajoutée :
     private fun setNotificationVolumeToPercentage() {
         val percentage = 50
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)
