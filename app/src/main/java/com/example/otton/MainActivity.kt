@@ -6,6 +6,7 @@ import android.widget.Button
 import android.content.Context
 import android.media.AudioManager
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -26,7 +27,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var audioRecord: AudioRecord
     private var isMeasuring = false
     private lateinit var capturedSoundLevel: String
+    private var decibels: Float = 0.0F
+    private lateinit var getpercentage: TextView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,41 +41,24 @@ class MainActivity : AppCompatActivity() {
 
         //le code que j'ai ajouté :
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val buttonSetVolume = findViewById<Button>(R.id.connect)
-        startMeasuring()
-        buttonSetVolume.setOnClickListener {
-            showCapturedSoundLevel()
-            setNotificationVolumeToPercentage()
-            //stopMeasuring()
+        val start = findViewById<Button>(R.id.start)
+        val stop = findViewById<Button>(R.id.stop)
+        getpercentage = findViewById(R.id.percentage)
+
+        start.setOnClickListener {
+            startleveling()
+        }
+        stop.setOnClickListener {
+            stopleveling()
         }
 
 
 
     }
-    private fun setNotificationVolumeToPercentage() {
-        if (::capturedSoundLevel.isInitialized) {
-            try {
-                val percentage = capturedSoundLevel.toInt()
-                Toast.makeText(this, "percentage : $capturedSoundLevel", Toast.LENGTH_SHORT).show()
-                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-                val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)
-                val desiredVolume = (maxVolume * percentage) / 100
 
-                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, desiredVolume, 0)
-            } catch (e: NumberFormatException) {
-                // La conversion de la chaîne en entier a échoué
-                // Gérer l'erreur ici
-                Toast.makeText(this, "conversion échouée", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            // capturedSoundLevel n'est pas initialisé
-            // Gérer l'erreur ici
-            Toast.makeText(this, "initialization échouée", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     // Méthode pour commencer la mesure
-    private fun startMeasuring() {
+    private fun startleveling() {
         // Utilisez la variable soundLevelTextView pour mettre à jour le TextView
         isMeasuring = true
         audioRecord.startRecording()
@@ -86,22 +73,29 @@ class MainActivity : AppCompatActivity() {
                 }
                 val rms = Math.sqrt(sum / BUFFER_SIZE)
                 val db = 20 * Math.log10(rms)
+                decibels = db.toFloat()
                 runOnUiThread {
                     capturedSoundLevel = "Niveau sonore : %.2f dB".format(db)
-                    println(capturedSoundLevel)
+                    action()
+
                 }
             }
         }.start()
     }
 
     // Méthode pour arrêter la mesure
-    private fun stopMeasuring() {
+    private fun stopleveling() {
         isMeasuring = false
         audioRecord.stop()
     }
-    private fun showCapturedSoundLevel() {
+    private fun action() {
         if (::capturedSoundLevel.isInitialized) {
-            Toast.makeText(this, "Niveau sonore capturé : $capturedSoundLevel", Toast.LENGTH_SHORT).show()
+            val percentage = decibels.toInt()
+            val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)
+            val desiredVolume = (maxVolume * percentage) / 100
+            audioManager.setStreamVolume(AudioManager.STREAM_RING, desiredVolume, 0)
+            getpercentage.text = audioManager.getStreamVolume(AudioManager.STREAM_RING).toString()
         } else {
             Toast.makeText(this, "Aucune valeur de niveau sonore à afficher.", Toast.LENGTH_SHORT).show()
         }
