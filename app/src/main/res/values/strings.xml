@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Otton</string>
+    <string name="sensibilite">Sensibilité : </string>
+    <string name="taux">taux de rafraîchissement</string>
+    <string name="booster">Booster</string>
+
+
+
 </resources>

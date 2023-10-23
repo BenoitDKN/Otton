@@ -5,43 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:text="Start"
-        app:layout_constraintStart_toStartOf="@+id/stop"
-        app:layout_constraintTop_toBottomOf="@+id/stop" />
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
 
-    <Button
-        android:id="@+id/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="95dp"
-        android:text="Stop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="254dp"
+            android:layout_height="105dp"
+            android:text="Otton"
+            android:textSize="60sp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp"
+            android:typeface="@font/pangram"
+            style="@style/ottones"/>
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="4dp"
-        android:text="pourcentage du volume en temps réel : "
-        app:layout_constraintEnd_toStartOf="@+id/percentage"
-        app:layout_constraintTop_toBottomOf="@+id/start" />
-
-    <TextView
-        android:id="@+id/percentage"
-        android:layout_width="42dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="156dp"
-        android:text="0"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text1"
-        app:layout_constraintStart_toStartOf="@+id/start" />
+        <Switch
+            android:id="@+id/mySwitch"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            style="@style/toggl"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
